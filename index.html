@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>AnyAccomp</title>
+  <script src="./static/tailwind.js"></script>
+  <script src="./static/flowbite.min.js"></script>
+
+  <style type="text/tailwindcss">
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+    @layer base {
+      html {
+        @apply scroll-smooth;
+      }
+
+      a[href^="http"] {
+        @apply text-blue-500;
+      }
+
+      a:hover {
+        @apply text-blue-700 underline;
+      }
+
+      h1 {
+        @apply mb-6 text-4xl font-bold text-gray-900 text-center;
+      }
+
+      h2 {
+        @apply text-xl font-bold tracking-tight text-gray-900;
+      }
+
+      p {
+        @apply mb-4 font-normal text-gray-900 leading-relaxed;
+      }
+    }
+
+    .demo-table td {
+        vertical-align: top;
+        text-align: center;
+        padding-bottom: 1.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .demo-table audio {
+        width: 100%;
+    }
+  </style>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {}
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+    <nav class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+            <span id="nav-title" class="text-xl font-bold text-gray-900 opacity-0 transition-opacity duration-300">AnyAccomp</span>
+        </div>
+        <div class="flex items-center space-x-8">
+          <a href="#home" class="text-gray-600 hover:text-blue-600 font-medium">Abstract</a>
+          <a href="#gallery" class="text-gray-600 hover:text-blue-600 font-medium">Framework</a>
+          <a href="#experiments" class="text-gray-600 hover:text-blue-600 font-medium">Experiments</a>
+          <div class="relative group pb-4 -mb-4 pt-4 -mt-4">
+            <button class="text-gray-600 hover:text-blue-600 font-medium inline-flex items-center">
+              <span>Audio Demos</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200">
+              <a href="#demos" onclick="clickTab('yue')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">In Domain</a>
+              <a href="#demos" onclick="clickTab('musedb')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Clean Vocal</a>
+              <a href="#demos" onclick="clickTab('moise')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Instrument</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div id="app">
+    <div class="p-5 md:p-0 mt-8 max-w-screen-xl mx-auto">
+      <div class="p-6">
+        <div id="home" class="scroll-mt-28">
+          <div class="mt-8 mb-8">
+            <h1 class="main-title">ANYACCOMP: GENERALIZABLE ACCOMPANIMENT GENERATION VIA QUANTIZED MELODIC BOTTLENECK</h1>
+            <div class="text-center text-lg mt-4">
+              <p class="font-semibold">
+                Junan Zhang<sup>&star;</sup> &nbsp;&nbsp;&nbsp;&nbsp;
+                Yunjia Zhang<sup>&star;</sup> &nbsp;&nbsp;&nbsp;&nbsp;
+                Xueyao Zhang &nbsp;&nbsp;&nbsp;&nbsp;
+                Zhizheng Wu
+              </p>
+              <p class="mt-2 text-base">
+                The Chinese University of Hong Kong, Shenzhen
+              </p>
+            </div>
+             <div class="flex justify-center items-center gap-2 mt-6 mb-8">
+                <a href="anyaccomp.github.io" target="_blank"><img src="https://img.shields.io/badge/arXiv-Paper-b31b1b.svg" alt="Paper"></a>
+                <a href="anyaccomp.github.io" target="_blank"><img src="https://img.shields.io/badge/GitHub-Code-blue" alt="Code"></a>
+                <a href="anyaccomp.github.io" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-yellow" alt="Model"></a>
+             </div>
+          </div>
+          <div class="sticky top-16 z-30">
+              <div class="bg-white/80 backdrop-blur-md border-b border-gray-200">
+                  <h2 class="py-3 text-center">Abstract</h2>
+              </div>
+          </div>
+          <div class="max-w-[900px] mx-auto mt-4 mb-8">
+            <p>
+              State-of-the-art Singing Accompaniment Generation (SAG) models rely on source-separated vocals, causing them
+              to overfit to separation artifacts. This creates a critical train-test mismatch, leading to failure on
+              clean, real-world vocal inputs. We introduce AnyAccomp, a framework that resolves this by decoupling
+              accompaniment generation from source-dependent artifacts. AnyAccomp first employs a quantized melodic
+              bottleneck, using a chromagram and a VQ-VAE to extract a discrete, timbre-invariant representation of the
+              core melody. A subsequent flow-matching model then generates the accompaniment conditioned on these robust
+              codes. Experiments show AnyAccomp achieves competitive performance on separated-vocal benchmarks while
+              significantly outperforming baselines on generalization test sets of clean studio vocals and, notably, solo
+              instrumental tracks. This demonstrates a qualitative leap in generalization, enabling robust accompaniment
+              for instruments—a task where existing models completely fail—and paving the way for more versatile music
+              co-creation tools.
+            </p>
+          </div>
+        </div>
+
+        <div id="gallery" class="mt-8 mb-8 scroll-mt-28">
+           <div class="sticky top-16 z-30">
+              <div class="bg-white/80 backdrop-blur-md border-b border-gray-200">
+                  <h2 class="py-3 text-center">Framework Overview</h2>
+              </div>
+          </div>
+          <div class="max-w-[1100px] mx-auto flex flex-col md:flex-row gap-8 items-center pt-8">
+            <div class="md:w-1/2">
+              <img src="data/framework.jpg" class="w-full"></img>
+            </div>
+            <div class="md:w-1/2">
+              <p class="text-left">
+                  <b>An overview of ANYACCOMP.</b> The process involves two main stages:
+              </p>
+              <p class="text-left">
+                (1) The input audio is processed through a quantized melodic bottleneck, where a VQ-VAE encodes its chromagram into a sequence of discrete
+                  tokens.
+              </p>
+              <p class="text-left">
+                (2) A Flow Matching Transformer generates a mel-spectrogram conditioned on these discrete tokens,
+              which is subsequently synthesized into the final accompaniment audio by a vocoder.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-16 mb-8 scroll-mt-28" id="experiments">
+          <div class="sticky top-16 z-30">
+              <div class="bg-white/80 backdrop-blur-md border-b border-gray-200">
+                  <h2 class="py-3 text-center">Empirical Experiments</h2>
+              </div>
+          </div>
+            <div class="max-w-[1100px] mx-auto flex flex-col md:flex-row gap-8 items-center pt-8">
+              <div class="md:w-1/2">
+                <img src="data/cluster.png" class="w-full max-w-xl"></img>
+                 <p class="text-center text-sm mt-2 max-w-xl mx-auto">
+                    <b>Fig. 2: Visualization of different representations.</b> The top row evaluates timbre invariance (better = more intermingled). The bottom row assesses melodic clusterability (better = tighter clusters).
+                 </p>
+              </div>
+              <div class="md:w-1/2">
+                <p>In this paper, we view the SAG task as a conditional generation problem, focusing on identifying a suitable condition representation. Such a representation should satisfy two key properties: timbre invariance and melodic clusterability.</p>
+                <p><b>Timbre invariance.</b> A robust representation must be agnostic to the source timbre, a property crucial for generalization. As visualized in the top row of the figure, the traditional mel spectrogram fails this test, exhibiting strong clustering by instrument type. The dense chromagram significantly mitigates this bias. However, it is our final vector-quantized chromagram representation that achieves the ideal result: a feature space where points from all instruments are thoroughly intermingled, demonstrating a successful decoupling of melodic content from source timbre.</p>
+                <p><b>Melodic clusterability.</b> An effective representation must map identical melodies to compact regions in the feature space, irrespective of the instrument. The bottom row of the figure illustrates a clear progression. While the mel spectrogram fails to form coherent clusters, the dense chromagram shows a marked improvement. Our final vector-quantized chromagram representation further refines this by producing exceptionally tight and well-separated clusters, creating a highly robust condition for the generative model.</p>
+              </div>
+            </div>
+        </div>
+
+        <!-- Demo Section -->
+        <div class="mt-8 mb-8 scroll-mt-16" id="demos">
+          <!-- Tabs -->
+          <div class="sticky top-16 bg-white/80 backdrop-blur-md z-40">
+              <div class="border-b border-gray-200">
+                  <h2 class="py-3 text-center">Audio Demos</h2>
+              </div>
+              <div class="border-b border-gray-200 max-w-screen-xl mx-auto">
+                <ul class="flex flex-wrap justify-center -mb-px text-sm font-medium text-center" id="demo-tabs" role="tablist">
+                  <li class="me-2" role="presentation">
+                    <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg" type="button" role="tab"
+                      onclick="showDataset('yue', this)">YuE (In Domain)</button>
+                  </li>
+                  <li class="me-2" role="presentation">
+                    <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg" type="button" role="tab"
+                      onclick="showDataset('musedb', this)">MUSDB18 (Clean Vocal)</button>
+                  </li>
+                  <li class="me-2" role="presentation">
+                    <button class="tab-btn inline-block p-4 border-b-2 rounded-t-lg" type="button" role="tab"
+                      onclick="showDataset('moise', this)">MoiseDB (Instrument)</button>
+                  </li>
+                </ul>
+              </div>
+          </div>
+          <!-- Tab Content -->
+          <div id="demo-tab-content" class="pt-8">
+            <!-- YUE DATASET -->
+            <div id="yue-content" class="dataset-content hidden">
+               <p class="text-center">The YuE dataset is a collection of Chinese pop songs, used to test the models' performance on a different language and musical style.</p>
+               <div class="w-full overflow-x-auto">
+                <div class="relative w-[1200px] mx-auto text-sm text-left rtl:text-right text-gray-900">
+                  <table class="demo-table w-full">
+                    <thead>
+                      <tr>
+                        <th style="width: 20%;">Input</th>
+                        <th style="width: 12%;">Type</th>
+                        <th style="width: 17%;">Ours (AnyAccomp)</th>
+                        <th style="width: 17%;">Mel Model</th>
+                        <th style="width: 17%;">FastSAG</th>
+                        <th style="width: 17%;">Groundtruth</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- MUSEDB DATASET -->
+            <div id="musedb-content" class="dataset-content hidden">
+              <p class="text-center">The MUSDB18 dataset is a widely used benchmark for source separation, containing 150 full-length tracks with isolated vocal, drums, bass, and other stems.</p>
+              <div class="w-full overflow-x-auto">
+                <div class="relative w-[1200px] mx-auto text-sm text-left rtl:text-right text-gray-900">
+                  <table class="demo-table w-full">
+                    <thead>
+                      <tr>
+                        <th style="width: 20%;">Input</th>
+                        <th style="width: 12%;">Type</th>
+                        <th style="width: 17%;">Ours (AnyAccomp)</th>
+                        <th style="width: 17%;">Mel Model</th>
+                        <th style="width: 17%;">FastSAG</th>
+                        <th style="width: 17%;">Groundtruth</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- MOISE DATASET -->
+            <div id="moise-content" class="dataset-content hidden">
+              <p class="text-center">The MoiseDB dataset contains a collection of solo instrumental tracks (guitar, bass, piano, etc.), presenting a significant generalization challenge for models trained primarily on vocals.</p>
+               <div class="w-full overflow-x-auto">
+                <div class="relative w-[1200px] mx-auto text-sm text-left rtl:text-right text-gray-900">
+                  <table class="demo-table w-full">
+                    <thead>
+                       <tr>
+                        <th style="width: 20%;">Input</th>
+                        <th style="width: 12%;">Type</th>
+                        <th style="width: 17%;">Ours (AnyAccomp)</th>
+                        <th style="width: 17%;">Mel Model</th>
+                        <th style="width: 17%;">FastSAG</th>
+                        <th style="width: 17%;">Groundtruth</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const FILE_LISTS = {
+        "MUSEDB": [
+            "ANiMAL - Clinic A_002.wav", "Actions - South Of The Water_000.wav",
+            "Al James - Schoolboy Facination_002.wav", "Flags - 54_010.wav",
+            "James May - On The Line_003.wav", "Lushlife - Toynbee Suite_016.wav",
+            "Music Delta - Reggae_007.wav", "Raft Monk - Tiring_001.wav",
+            "Secretariat - Borderline_006.wav", "The Mountaineering Club - Mallory_000.wav"
+        ],
+        "Moise": [
+            "1afe1b3b-3e2e-48d3-b859-f50e222cbaf4_Big_Life_Firefly_guitar_ddb98745_1.wav",
+            "2d39a32d-5993-4f66-89ff-bf9dabb8e45b_Home_Ben_James_guitar_89848567_2.wav",
+            "3e656eec-84d4-4a45-b410-d3817d849f92_You_Can_Bring_The_Sunshine_Firefly_bass_d2190616_19.wav",
+            "491c1ff5-1e7b-4046-8029-a82d4a8aefb4_Let_You_Down_Again_Andy_Bennett_bass_b6ea1154_1.wav",
+            "4999a0bf-a753-4e0e-85b1-690259dabf96_Reach_Out_Strugzy_other_keys_c07009e9_8.wav",
+            "747d5c98-665b-4470-a696-7a6cf6968ef1_Joy_To_The_World_Skipsam_Soo_other_keys_05704a0e_2.wav",
+            "8042b88a-6179-406b-9ec4-b45a4cdd4a71_Go_Quiet_Rivum_other_keys_9a1b45d6_12.wav",
+            "e9336d31-c0df-4c91-be2b-7c4420c9cd34_Old_Mother_Hubbard_Sunny_SIde_Up_other_keys_81a090ce_10.wav",
+            "6ce087b4-e571-4472-9be2-04b5340311c6_Electric_Firefly_piano_84f30f84_7.wav",
+            "9ac2612b-e25f-4d27-8d43-b957e7e5a74b_Send_The_Elevator_Down_Firefly_piano_b800c821_14.wav"
+        ],
+        "YUE": [
+            "VbCjPVntKas_193.21.Instrumental.mp3", "zo44QuMEbV4_64.98.Instrumental.mp3",
+            "黄莺莺-翠谷回莺-付上千万倍_64.64.Instrumental.mp3",
+            "牛奶咖啡-夏至未至 电视剧原声带-一个人的风景_213.30.Instrumental.mp3",
+            "zep_Wbur8uU_32.02.Instrumental.mp3", "GfIfsNS1Q9I_18.68.Instrumental.mp3",
+            "28246522_105.25.Instrumental.mp3", "20707627_21.24.Instrumental.mp3",
+            "1456146628_117.25.Instrumental.mp3", "_fEzOJoXIKw_46.94.Instrumental.mp3"
+        ]
+    };
+
+    function generateHtmlForFile(datasetName, filename) {
+        const baseFilename = filename.substring(0, filename.lastIndexOf('.'));
+        const audioExt = filename.substring(filename.lastIndexOf('.') + 1);
+        const imgExt = 'png';
+
+        return `
+            <tr class="border-t-2 border-gray-200">
+                <td rowspan="2" class="p-2" style="vertical-align: middle;">
+                    <img src="data/${datasetName}/input_spectrogram/${baseFilename}.${imgExt}" alt="Input">
+                    <audio controls src="data/${datasetName}/input_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+                <td class="p-2 font-semibold text-center" style="vertical-align: middle;">Accompaniment</td>
+                <td class="p-2">
+                    <img src="data/${datasetName}/ours_accompaniment_spectrogram/${baseFilename}.${imgExt}" alt="Ours Accompaniment">
+                    <audio controls src="data/${datasetName}/ours_accompaniment_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+                <td class="p-2">
+                    <img src="data/${datasetName}/mel_model_accompaniment_spectrogram/${baseFilename}.${imgExt}" alt="Mel Accompaniment">
+                    <audio controls src="data/${datasetName}/mel_model_accompaniment_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+                <td class="p-2">
+                    <img src="data/${datasetName}/fastsag_accompaniment_spectrogram/${baseFilename}.${imgExt}" alt="FastSAG Accompaniment">
+                    <audio controls src="data/${datasetName}/fastsag_accompaniment_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+                <td class="p-2">
+                    <img src="data/${datasetName}/groundtruth_accompaniment_spectrogram/${baseFilename}.${imgExt}" alt="Groundtruth Accompaniment">
+                    <audio controls src="data/${datasetName}/groundtruth_accompaniment_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+            </tr>
+            <tr class="bg-gray-50 border-b-2 border-gray-200">
+                <td class="p-2 font-semibold text-center" style="vertical-align: middle;">Mixture</td>
+                <td class="p-2">
+                    <img src="data/${datasetName}/ours_mixture_spectrogram/${baseFilename}.${imgExt}" alt="Ours Mixture">
+                    <audio controls src="data/${datasetName}/ours_mixture_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+                <td class="p-2">
+                    <img src="data/${datasetName}/mel_model_mixture_spectrogram/${baseFilename}.${imgExt}" alt="Mel Mixture">
+                    <audio controls src="data/${datasetName}/mel_model_mixture_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+                <td class="p-2">
+                    <img src="data/${datasetName}/fastsag_mixture_spectrogram/${baseFilename}.${imgExt}" alt="FastSAG Mixture">
+                    <audio controls src="data/${datasetName}/fastsag_mixture_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+                <td class="p-2">
+                    <img src="data/${datasetName}/groundtruth_mixture_spectrogram/${baseFilename}.${imgExt}" alt="Groundtruth Mixture">
+                    <audio controls src="data/${datasetName}/groundtruth_mixture_audio/${baseFilename}.${audioExt}"></audio>
+                </td>
+            </tr>
+        `;
+    }
+
+    function populateTables() {
+        for (const [dataset, files] of Object.entries(FILE_LISTS)) {
+            const datasetId = dataset.toLowerCase();
+            const tableBody = document.querySelector(`#${datasetId}-content tbody`);
+            if (tableBody) {
+                let allHtml = '';
+                files.forEach(file => {
+                    allHtml += generateHtmlForFile(dataset, file);
+                });
+                tableBody.innerHTML = allHtml;
+            }
+        }
+    }
+
+    function showDataset(datasetId, clickedButton) {
+      // Hide all content divs
+      const allContent = document.querySelectorAll('.dataset-content');
+      allContent.forEach(div => div.classList.add('hidden'));
+
+      // Show the selected content div
+      const selectedContent = document.getElementById(`${datasetId}-content`);
+      if (selectedContent) {
+        selectedContent.classList.remove('hidden');
+      }
+
+      // Handle button active state
+      const allButtons = document.querySelectorAll('.tab-btn');
+      allButtons.forEach(button => {
+        button.classList.remove('text-blue-600', 'border-blue-600');
+        button.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+        button.setAttribute('aria-selected', 'false');
+      });
+
+      // Apply active styles to the clicked button (if it's a tab button)
+      if (clickedButton && clickedButton.classList.contains('tab-btn')) {
+          clickedButton.classList.add('text-blue-600', 'border-blue-600');
+          clickedButton.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+          clickedButton.setAttribute('aria-selected', 'true');
+      } else {
+        // If called from dropdown, find the corresponding button
+        const matchingButton = document.querySelector(`.tab-btn[onclick*="'${datasetId}'"]`);
+        if (matchingButton) {
+            matchingButton.classList.add('text-blue-600', 'border-blue-600');
+            matchingButton.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+            matchingButton.setAttribute('aria-selected', 'true');
+        }
+      }
+    }
+
+    function clickTab(datasetId) {
+        const button = document.querySelector(`.tab-btn[onclick*="'${datasetId}'"]`);
+        if (button) {
+            showDataset(datasetId, button);
+        }
+    }
+
+    // Set the initial state on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      populateTables();
+      // Set the first tab as active
+      const firstButton = document.querySelector('#demo-tabs button');
+      if (firstButton) {
+        showDataset('yue', firstButton);
+      }
+
+      // Logic for showing title in nav bar on scroll
+      const navTitle = document.getElementById('nav-title');
+      const mainTitle = document.querySelector('.main-title');
+      const header = document.querySelector('header');
+
+      if(navTitle && mainTitle && header) {
+          const observer = new IntersectionObserver(
+              ([entry]) => {
+                  if (!entry.isIntersecting) {
+                      navTitle.classList.remove('opacity-0');
+                  } else {
+                      navTitle.classList.add('opacity-0');
+                  }
+              },
+              { rootMargin: `-${header.offsetHeight}px 0px 0px 0px` }
+          );
+          observer.observe(mainTitle);
+      }
+    });
+  </script>
+
+</body>
+
+</html>
